@@ -1,6 +1,6 @@
 deployments:
   ERP:
-    dockerimage: trusty:latest
+    dockerimage: ubuntu:trusty
     build_steps:
       - cd ~
       - nvm install 10
