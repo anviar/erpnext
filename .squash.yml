@@ -1,4 +1,6 @@
 deployments:
   erpnext:
+    filename:
+      ./.squash/docker-compose.yml
     context_path:
       ./.squash
