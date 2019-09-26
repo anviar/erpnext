@@ -1,0 +1,43 @@
+version: '3.7'
+
+services:
+
+  erpnext:
+    image: erpnext
+    restart: always
+    build:
+      context: .
+      args:
+        MYSQL_DATABASE: erpnext
+        MYSQL_USER: erpnext
+        MYSQL_PASSWORD: erpnext-pass
+        MYSQL_HOST: database.erpnext
+        MYSQL_ROOT_PASSWORD: erpnext-root-pass
+        SQUASH_DOMAIN: ${SQUASH_DOMAIN}
+    ports:
+      - 80:8000
+    depends_on:
+      - database
+    environment:
+      MYSQL_DATABASE: erpnext
+      MYSQL_ROOT_PASSWORD: erpnext-root-pass
+      ADMIN_PASSWORD: erpnext-pass
+      MYSQL_USER: erpnext
+      MYSQL_PASSWORD: erpnext-pass
+      MYSQL_HOST: database.erpnext
+      SQUASH_DOMAIN: ${SQUASH_DOMAIN}
+    container_name: web.erpnext
+
+  database:
+    image: mariadb
+    command:
+      - '--character-set-server=utf8mb4'
+      - '--collation-server=utf8mb4_unicode_ci'
+      - '--default-authentication-plugin=mysql_native_password'
+    restart: always
+    environment:
+      MYSQL_DATABASE: erpnext
+      MYSQL_USER: erpnext
+      MYSQL_PASSWORD: erpnext-root-pass
+      MYSQL_ROOT_PASSWORD: erpnext-root-pass
+    container_name: database.erpnext
