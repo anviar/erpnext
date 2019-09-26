@@ -1,5 +1,6 @@
 FROM debian:buster-slim
 COPY site_config.j2 /tmp/
+COPY entrypoint.sh /entrypoint.sh
 ARG MYSQL_DATABASE
 ARG MYSQL_USER
 ARG MYSQL_PASSWORD
@@ -32,16 +33,4 @@ RUN set -x && \
     bench get-app erpnext https://github.com/frappe/erpnext && \
     bench set-mariadb-host ${MYSQL_HOST} && \
     wget -q http://build.erpnext.com/20171108_190013_955977f8_database.sql.gz
-CMD set -x && \
-    # bench new-site ${SQUASH_DOMAIN} \
-    #     --db-name ${MYSQL_DATABASE} \
-    #     --mariadb-root-username root \
-    #     --mariadb-root-password ${MYSQL_ROOT_PASSWORD} \
-    #     --admin-password ${ADMIN_PASSWORD} \
-    #     --install-app erpnext && \
-    mkdir ~/frappe-bench/sites/${SQUASH_DOMAIN} && \
-    j2 /tmp/site_config.j2 >~/frappe-bench/sites/${SQUASH_DOMAIN}/site_config.json && \
-    # bench --site ${SQUASH_DOMAIN} --force restore 20171108_190013_955977f8_database.sql.gz &&\
-    bench --site ${SQUASH_DOMAIN} reinstall --yes && \
-    bench --site ${SQUASH_DOMAIN} install-app erpnext && \
-    bench start
+CMD ["/entrypoint.sh"]
